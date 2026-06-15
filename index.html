@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050505">
+  <title>旁白永远是对的</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="app" class="app-shell" data-screen="menu">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">流程图迷宫 / 毒舌旁白 / 多结局</p>
+        <h1>旁白永远是对的</h1>
+      </div>
+      <div class="top-actions">
+        <button id="audioToggle" class="ghost-button" type="button">声音：开</button>
+        <button id="restartButton" class="ghost-button" type="button">重新开始</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="menuScreen" class="screen menu-screen">
+        <div class="menu-copy">
+          <p class="narrator-kicker">“欢迎。请把选择权交给专业人士，比如我。”</p>
+          <h2>你站在一个流程图里。每扇门都像一个选项，每个选项都像一个错误。</h2>
+          <p>旁白会推荐路线，也会撒谎。你可以听话，可以反抗，也可以在它越来越不稳定时假装自己没看见。</p>
+          <section class="rules-box" aria-label="游戏规则">
+            <h3>游戏规则</h3>
+            <ul>
+              <li>每回合选择一扇门，进入新的房间节点。</li>
+              <li>旁白会给建议，但它可能误导你。</li>
+              <li>错误选择会消耗耐心值，耐心归零会进入失败结局。</li>
+              <li>连续违抗旁白 3 次，会解锁隐藏反抗路线。</li>
+              <li>连续听从旁白 5 次，也会解锁另一条隐藏路线。</li>
+              <li>目标不是打败怪物，而是看穿旁白和流程图。</li>
+            </ul>
+          </section>
+        </div>
+        <div class="menu-actions">
+          <button id="newGameButton" class="primary-button" type="button">开始新游戏</button>
+          <button id="continueButton" class="secondary-button" type="button">继续存档</button>
+          <button id="clearSaveButton" class="ghost-button" type="button">清除存档</button>
+        </div>
+      </section>
+
+      <section id="gameScreen" class="screen game-screen" hidden>
+        <section class="status-panel" aria-label="状态">
+          <div class="stat-card">
+            <span>耐心值</span>
+            <strong id="patienceValue">100</strong>
+            <div class="meter"><i id="patienceMeter"></i></div>
+          </div>
+          <div class="stat-card">
+            <span>旁白好感</span>
+            <strong id="affinityValue">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>旁白愤怒</span>
+            <strong id="angerValue">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>控制欲</span>
+            <strong id="controlValue">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>选择次数</span>
+            <strong id="choiceCount">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>结局收集</span>
+            <strong id="endingCount">0/8</strong>
+          </div>
+        </section>
+
+        <section class="reader-layout">
+          <aside class="map-panel" aria-label="流程图">
+            <div class="panel-title">流程图</div>
+            <canvas id="mazeCanvas" width="720" height="460"></canvas>
+          </aside>
+
+          <article class="room-panel">
+            <div class="room-header">
+              <p id="roomIndex" class="eyebrow">节点 00</p>
+              <h2 id="roomName">房间名</h2>
+            </div>
+            <p id="roomDescription" class="room-description">房间描述</p>
+
+            <section class="narrator-panel" aria-live="polite">
+              <div class="panel-title">旁白</div>
+              <div id="narratorText" class="narrator-text"></div>
+            </section>
+
+            <section class="choice-panel">
+              <div class="panel-title">门</div>
+              <div id="choiceList" class="choice-list"></div>
+            </section>
+          </article>
+        </section>
+
+        <section class="bottom-panels">
+          <section class="log-panel">
+            <div class="panel-title">旅途记录</div>
+            <ol id="pathList"></ol>
+          </section>
+          <section class="log-panel">
+            <div class="panel-title">事件日志</div>
+            <ol id="eventLog"></ol>
+          </section>
+          <section class="log-panel">
+            <div class="panel-title">成就</div>
+            <div id="achievementList" class="achievement-list"></div>
+          </section>
+        </section>
+      </section>
+
+      <section id="endingScreen" class="screen ending-screen" hidden>
+        <p id="endingType" class="eyebrow">结局</p>
+        <h2 id="endingTitle">结局标题</h2>
+        <p id="endingText">结局正文</p>
+        <div id="endingStats" class="ending-stats"></div>
+        <div class="menu-actions">
+          <button id="endingRestartButton" class="primary-button" type="button">重新开始</button>
+          <button id="endingMenuButton" class="secondary-button" type="button">回到标题</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="fakeModal" class="fake-modal" hidden>
+    <div>
+      <p id="fakeModalTitle">系统提示</p>
+      <span id="fakeModalText">这当然只是演出。旁白没有这个权限。</span>
+    </div>
+  </div>
+
+  <script defer src="js/rooms.js"></script>
+  <script defer src="js/save.js"></script>
+  <script defer src="js/audio.js"></script>
+  <script defer src="js/narrator.js"></script>
+  <script defer src="js/ui.js"></script>
+  <script defer src="js/game.js"></script>
+</body>
+</html>
